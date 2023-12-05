@@ -9,12 +9,9 @@ on:
 jobs:
   build_and_publish:
     name: Build and Publish
-
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -38,7 +35,7 @@ jobs:
         shell: bash
         run: |
           store_path=$(pnpm store path | tr '\n' ' ')
-          echo "STORE_PATH=$store_path" >> $GITHUB_OUTPUT
+          echo "STORE_PATH=$store_path" >> $GITHUB_ENV
 
       - uses: actions/cache@v3
         name: Setup pnpm cache
@@ -61,3 +58,11 @@ jobs:
           name: ComfyBox-dist
           path: dist/
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/* # Specify the path to your artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
