@@ -59,6 +59,11 @@ jobs:
           path: dist/
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 
+      - name: Create Git Tag
+        run: |
+          git tag -a v1.0.0 -m "Version 1.0.0"  # Replace with your desired tag and message
+          git push origin v1.0.0  # Replace with the same tag name as above
+
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
